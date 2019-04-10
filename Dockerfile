@@ -9,22 +9,22 @@ FROM python:3.6-alpine
 
 # Install build deps and Glances (develop branch)
 
-COPY requirements.txt .
-
 RUN apk add --no-cache --virtual .build-deps \
 		linux-headers \
 		gcc \
 		g++ \
 		libc-dev \
 		git \
-	&& git clone -b develop https://github.com/nicolargo/glances.git \
-	&& cd glances \
-	&& pip install -r requirements.txt \
-	&& apk del .build-deps
+	&& git clone -b develop https://github.com/nicolargo/glances.git
 
 # Define working directory.
 WORKDIR /glances
  
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt \
+	&& apk del .build-deps
+
 ENV PYTHONUNBUFFERED 1
 
 # EXPOSE PORT (For XMLRPC)
